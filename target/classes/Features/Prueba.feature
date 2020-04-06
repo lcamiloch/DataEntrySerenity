@@ -5,7 +5,7 @@ Feature: Search to product in mercadolibre
   @smokeTest
   Scenario Outline: Free product shipping nationwide
     Given <name> could enter the mercadolibre page
-    When select a "<Product>" to buy
-    Then verify that the shipping is "<Send>"
+    When select a "<product>" to buy
+    Then verify that the shipping is "<send>"
 
     Examples:
