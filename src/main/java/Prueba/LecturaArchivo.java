@@ -1,37 +1,50 @@
 package Prueba;
 
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
 import java.io.*;
 
 public class LecturaArchivo {
 
     public static void main(String[] args) {
-        Leer_Fichero acceder = new Leer_Fichero();
+        Leer_Feature acceder = new Leer_Feature();
         acceder.leer();
     }
 }
 
-class Leer_Fichero {
+class Leer_Feature {
 
     public void leer() {
-        FileReader entrada;
-        BufferedReader miBuffer;
+        FileReader feature;
+        BufferedReader featureBuffer;
+        FileReader dataEntry;
+        int c = 0;
+
         {
             try {
-                entrada = new FileReader("D:\\Automation\\DataentrySerenity\\src\\main\\resources\\Features\\Prueba.feature");
-                miBuffer = new BufferedReader(entrada);
+                feature = new FileReader("D:\\Camiloch\\Workspace\\DataEntrySerenity\\src\\main\\resources\\Features\\Prueba.feature");
+                featureBuffer = new BufferedReader(feature);
+                dataEntry = new FileReader("D:\\Camiloch\\Workspace\\DataEntrySerenity\\DataEntry\\Prueba.csv");
 
-                String Linea = "";
-                while (Linea != null) {
-                    Linea = miBuffer.readLine();
-                    if(Linea != null) {
-                        System.out.println(Linea);
+                String LineaFeature = "";
+
+                while (LineaFeature != null) {
+                    LineaFeature = featureBuffer.readLine();
+                    if(LineaFeature != null) {
+                        System.out.println(LineaFeature);
                     }
                 }
+                while(c != -1){
+                    c = dataEntry.read();
+                    char letra = (char)c;
 
-                entrada.close();
+                    if ((c != 13) && (c != 10)){
+                        System.out.print(letra);
+                    }
+
+                    //System.out.println(c + " " + letra);
+                }
+
+                feature.close();
+                dataEntry.close();
 
             } catch (IOException e) {
                 e.printStackTrace();

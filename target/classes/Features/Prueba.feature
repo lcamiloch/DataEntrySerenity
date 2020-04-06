@@ -9,5 +9,3 @@ Feature: Search to product in mercadolibre
     Then verify that the shipping is "<Send>"
 
     Examples:
-      | name   | Product | Send   |
-      | Camilo | Balon   | gratis |
