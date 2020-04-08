@@ -19,11 +19,11 @@ class Leer_split {
         FileReader dataEntry;
         FileWriter writer;
         BufferedReader databuffer;
-        String datos[][];
-        String filas[];
+        String [][] datos;
+        String [] filas;
         String LineaFeature = "";
-        String ubicacionDataE = "D:\\Automation\\DataentrySerenity\\DataEntry\\Prueba.csv";
-        String ubicacionF = "D:\\Automation\\DataentrySerenity\\src\\main\\resources\\Features\\Prueba.feature";
+        String ubicacionDataE = "D:\\Camiloch\\Workspace\\DataEntrySerenity\\DataEntry\\Prueba.csv";
+        String ubicacionF = "D:\\Camiloch\\Workspace\\DataEntrySerenity\\src\\main\\resources\\Features\\Prueba.feature";
         int Fila = 0;
         int Columna = 0;
         int c = 0;
@@ -54,6 +54,7 @@ class Leer_split {
                 if (LineaFeature != null) {
                     j = 0;
                     filas = LineaFeature.split(";");
+
                     for (String palabra : filas) {
                         datos[i][j] = filas[j];
                         j++;

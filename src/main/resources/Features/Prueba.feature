@@ -13,3 +13,7 @@ Feature: Search to product in mercadolibre
 |Camilo Chaparro|tarjeta debito|150000|
 |Diana Camila Ch|tarjeta credito|3555648|
 |Juan|Cta Ahorros|550|
+|name|product|send|
+|Camilo Chaparro|tarjeta debito|150000|
+|Diana Camila Ch|tarjeta credito|3555648|
+|Juan|Cta Ahorros|550|
