@@ -2,7 +2,7 @@ package Prueba;
 
 import java.io.*;
 
-public class LecturaArchivo {
+public class Functions {
 
     public static void main(String[] args) {
         Leer_Feature acceder = new Leer_Feature();

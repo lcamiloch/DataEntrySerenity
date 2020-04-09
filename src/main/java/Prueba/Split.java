@@ -86,7 +86,7 @@ class Leer_split {
                 System.out.print("\n");
             }
 
-        writer.close();
+
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Error");
