@@ -3,21 +3,23 @@ package Steps;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class BuiltFeature {
     public static void main(String[] args) throws IOException {
         String dataEntryLocation = "D:\\Camiloch\\Workspace\\DataEntrySerenity\\DataEntry\\Prueba.xlsx";
         String featureLocation = "D:\\Camiloch\\Workspace\\DataEntrySerenity\\src\\main\\resources\\Features\\Prueba.feature";
 
-        writefeature(readExcel(dataEntryLocation), featureLocation);
+        List file = backupFeature(featureLocation);
+        String[][] dataEntry = readDataEntry(dataEntryLocation);
+        writefeature(dataEntry, featureLocation);
+        restoreFeature(file, featureLocation);
     }
 
-    public static String[][] readExcel(String file) throws IOException {
+    public static String[][] readDataEntry(String file) throws IOException {
 
         String[][] list;
 
@@ -39,9 +41,9 @@ public class BuiltFeature {
                 while (cellIterator.hasNext()) {
 
                     Cell currentCell = cellIterator.next();
-                    if (currentCell.getCellTypeEnum() == CellType.STRING) {
+                    if (currentCell.getCellType() == CellType.STRING) {
                         list[i][j] = currentCell.getStringCellValue();
-                    } else if (currentCell.getCellTypeEnum() == CellType.NUMERIC) {
+                    } else if (currentCell.getCellType() == CellType.NUMERIC) {
                         list[i][j] = String.format("%.0f", currentCell.getNumericCellValue());
                     }
                     j++;
@@ -57,11 +59,35 @@ public class BuiltFeature {
         FileWriter writer = new FileWriter(file, true);
 
         for (String x[]:array) {
-            writer.write("\n" + "   " + "|");
+            writer.write("\n" + "       " + "|");
             for(String y:x){
                 writer.write(y + "|");
             }
         }
         writer.close();
+    }
+
+    public static List backupFeature(String locationFile) throws IOException {
+        FileReader dataEntry = new FileReader(locationFile);
+        ArrayList<Integer> file = new ArrayList<>();
+        int data = 0;
+
+        while(data != -1){
+            data = dataEntry.read();
+            if(data != -1)
+                file.add(data);
+        }
+        dataEntry.close();
+        return file;
+    }
+
+    public static void restoreFeature(List data, String locationFile) throws IOException {
+        FileOutputStream file = new FileOutputStream(locationFile);;
+        int e = 0;
+        for(int i = 0; i<data.size(); i++){
+            e = (int) data.get(i);
+            file.write(e);
+        }
+        file.close();
     }
 }
