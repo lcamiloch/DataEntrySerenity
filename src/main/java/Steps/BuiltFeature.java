@@ -13,7 +13,7 @@ public class BuiltFeature {
         String dataEntryLocation = "D:\\Camiloch\\Workspace\\DataEntrySerenity\\DataEntry\\Prueba.xlsx";
         String featureLocation = "D:\\Camiloch\\Workspace\\DataEntrySerenity\\src\\main\\resources\\Features\\Prueba.feature";
 
-        List file = backupFeature(featureLocation);
+        List<Integer> file = backupFeature(featureLocation);
         String[][] dataEntry = readDataEntry(dataEntryLocation);
         writefeature(dataEntry, featureLocation);
         restoreFeature(file, featureLocation);
@@ -51,6 +51,7 @@ public class BuiltFeature {
                 i++;
             }
             excelFile.close();
+            workbook.close();
             return list;
     }
 
@@ -67,7 +68,7 @@ public class BuiltFeature {
         writer.close();
     }
 
-    public static List backupFeature(String locationFile) throws IOException {
+    public static List<Integer> backupFeature(String locationFile) throws IOException {
         FileReader dataEntry = new FileReader(locationFile);
         ArrayList<Integer> file = new ArrayList<>();
         int data = 0;
@@ -81,7 +82,7 @@ public class BuiltFeature {
         return file;
     }
 
-    public static void restoreFeature(List data, String locationFile) throws IOException {
+    public static void restoreFeature(List <Integer> data, String locationFile) throws IOException {
         FileOutputStream file = new FileOutputStream(locationFile);;
         int e = 0;
         for(int i = 0; i<data.size(); i++){
