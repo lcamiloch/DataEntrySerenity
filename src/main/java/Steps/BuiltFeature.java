@@ -9,32 +9,29 @@ import java.util.Iterator;
 import java.util.List;
 
 public class BuiltFeature {
-    public static void main(String[] args) throws IOException {
-        String dataEntryLocation = "D:\\Camiloch\\Workspace\\DataEntrySerenity\\DataEntry\\Prueba.xlsx";
-        String featureLocation = "D:\\Camiloch\\Workspace\\DataEntrySerenity\\src\\main\\resources\\Features\\Prueba.feature";
 
-        List<Integer> file = backupFeature(featureLocation);
-        String[][] dataEntry = readDataEntry(dataEntryLocation);
-        writefeature(dataEntry, featureLocation);
-        restoreFeature(file, featureLocation);
+    public static void main(String[] args) throws IOException {
+        String dataEntryLocation = "D:\\Automation\\DataentrySerenity\\DataEntrySerenity\\DataEntry\\Prueba.xlsx";
+        String featureLocation = "D:\\Automation\\DataentrySerenity\\DataEntrySerenity\\src\\main\\resources\\features\\Prueba.feature";
+
+        List<String> fileFeature = backupFeature(featureLocation);
+        List<String> dataEntry = readDataEntry(dataEntryLocation);
+        writeFeature(dataEntry, featureLocation, fileFeature);
+        //restoreFeature(fileFeature, featureLocation);
     }
 
-    public static String[][] readDataEntry(String file) throws IOException {
+    public static List<String> readDataEntry(String file) throws IOException {
 
-        String[][] list;
+        FileInputStream excelFile = new FileInputStream(new File(file));
+        Workbook workbook = new XSSFWorkbook(excelFile);
+        ArrayList<String> data = new ArrayList<>();
 
-            FileInputStream excelFile = new FileInputStream(new File(file));
-            Workbook workbook = new XSSFWorkbook(excelFile);
-            Sheet datatypeSheet = workbook.getSheetAt(0);
+        for(int i = 0; i < workbook.getNumberOfSheets(); i++) {
+            Sheet datatypeSheet = workbook.getSheetAt(i);
             Iterator<Row> iterator = datatypeSheet.iterator();
 
-            int rows = datatypeSheet.getLastRowNum() + 1;
-            int columns = datatypeSheet.getRow(0).getLastCellNum();
-            list = new String[rows][columns];
-            int i = 0;
-
             while (iterator.hasNext()) {
-                int j = 0;
+
                 Row currentRow = iterator.next();
                 Iterator<Cell> cellIterator = currentRow.iterator();
 
@@ -42,52 +39,71 @@ public class BuiltFeature {
 
                     Cell currentCell = cellIterator.next();
                     if (currentCell.getCellType() == CellType.STRING) {
-                        list[i][j] = currentCell.getStringCellValue();
+                        data.add(currentCell.getStringCellValue());
                     } else if (currentCell.getCellType() == CellType.NUMERIC) {
-                        list[i][j] = String.format("%.0f", currentCell.getNumericCellValue());
+                        data.add(String.format("%.0f", currentCell.getNumericCellValue()));
+                    }
+                }
+                data.add("EndLine");
+            }
+            data.add("EndSheet");
+        }
+        excelFile.close();
+        workbook.close();
+        return data;
+    }
+
+    public static void writeFeature(List dataEntry , String featureLocation, List featureFile) throws IOException {
+
+        FileWriter file = new FileWriter(featureLocation);
+        String convertFeature = "";
+        int j = 0;
+        for(int i = 0; i < featureFile.size(); i++){
+            String convertDataEntry = "";
+            convertFeature = featureFile.get(i).toString();
+            if(convertFeature.contains("Examples")){
+                file.write(featureFile.get(i) + "\n" + "        ");
+                while(convertDataEntry != "EndSheet") {
+                    convertDataEntry = dataEntry.get(j).toString();
+                    if(convertDataEntry != "EndSheet") {
+                        if (convertDataEntry != "EndLine"){
+                            file.write("| " + convertDataEntry + " ");
+                        }
+                        else{
+                            file.write("|\n      ");
+                        }
                     }
                     j++;
                 }
-                i++;
+                file.write("\n");
             }
-            excelFile.close();
-            workbook.close();
-            return list;
-    }
-
-    public static void writefeature(String[][] array , String file) throws IOException {
-
-        FileWriter writer = new FileWriter(file, true);
-
-        for (String x[]:array) {
-            writer.write("\n" + "       " + "|");
-            for(String y:x){
-                writer.write(y + "|");
+            else {
+                file.write(featureFile.get(i) + "\n");
             }
         }
-        writer.close();
+        file.close();
     }
 
-    public static List<Integer> backupFeature(String locationFile) throws IOException {
-        FileReader dataEntry = new FileReader(locationFile);
-        ArrayList<Integer> file = new ArrayList<>();
-        int data = 0;
+    public static List<String> backupFeature(String locationFile) throws IOException {
+        FileReader fileOrigin = new FileReader(locationFile);
+        BufferedReader bufferRead = new BufferedReader(fileOrigin);
+        ArrayList<String> file = new ArrayList<>();
 
-        while(data != -1){
-            data = dataEntry.read();
-            if(data != -1)
-                file.add(data);
+        String line = "";
+        while(line != null){
+            line = bufferRead.readLine();
+            if(line != null) {
+                file.add(line);
+            }
         }
-        dataEntry.close();
+        fileOrigin.close();
         return file;
     }
 
-    public static void restoreFeature(List <Integer> data, String locationFile) throws IOException {
-        FileOutputStream file = new FileOutputStream(locationFile);;
-        int e = 0;
+    public static void restoreFeature(List <String> data, String locationFile) throws IOException {
+        FileWriter file = new FileWriter(locationFile);
         for(int i = 0; i<data.size(); i++){
-            e = (int) data.get(i);
-            file.write(e);
+            file.write(data.get(i) + "\n");
         }
         file.close();
     }
